@@ -1,0 +1,26 @@
+services:
+  # Backend API
+  - type: web
+    name: varhad-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromDatabase:
+          name: varhad-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: CLIENT_URL
+        value: https://varhad-platform.onrender.com
+
+  # MongoDB Database
+databases:
+  - name: varhad-db
+    databaseName: varhad_prepared
+    plan: free

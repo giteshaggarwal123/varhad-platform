@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: varhad-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: varhad_prepared
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - varhad-network
+
+  # Backend + Frontend Application
+  app:
+    build: .
+    container_name: varhad-app
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/varhad_prepared
+      - JWT_SECRET=your_production_jwt_secret_change_this
+      - JWT_EXPIRE=7d
+      - PORT=5000
+    depends_on:
+      - mongodb
+    networks:
+      - varhad-network
+    command: sh -c "sleep 10 && node server/seeds/seedData.js && node server/server.js"
+
+volumes:
+  mongodb_data:
+
+networks:
+  varhad-network:
+    driver: bridge
