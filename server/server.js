@@ -125,6 +125,7 @@ const hivTests = require('./routes/hivTests');
 const prep = require('./routes/prep');
 const inventory = require('./routes/inventory');
 const followUps = require('./routes/followUps');
+const artReferrals = require('./routes/artReferrals');
 const backupRoutes = require('./routes/backup');
 const securityRoutes = require('./routes/security');
 
@@ -136,6 +137,7 @@ app.use('/api/hiv-tests', hivTests);
 app.use('/api/prep', prep);
 app.use('/api/inventory', inventory);
 app.use('/api/followups', followUps);
+app.use('/api/art-referrals', artReferrals);
 app.use('/api/backup', backupRoutes);
 app.use('/api/security', securityRoutes);
 

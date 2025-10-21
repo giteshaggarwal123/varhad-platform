@@ -14,6 +14,7 @@ import PrEPInitiation from './pages/PrEPInitiation';
 import FollowUps from './pages/FollowUps';
 import Inventory from './pages/Inventory';
 import Documents from './pages/Documents';
+import ARTReferrals from './pages/ARTReferrals';
 import AssetManagement from './pages/AssetManagement';
 import HRAttendance from './pages/HRAttendance';
 import PrEPConsent from './pages/PrEPConsent';
@@ -45,6 +46,7 @@ function App() {
             <Route path="hiv-testing" element={<HIVTesting />} />
             <Route path="prep" element={<PrEPInitiation />} />
             <Route path="documents" element={<Documents />} />
+            <Route path="art-referrals" element={<ARTReferrals />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="asset-management" element={<AssetManagement />} />
             <Route path="followups" element={<FollowUps />} />
