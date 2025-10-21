@@ -25,6 +25,14 @@ const Reports = () => {
     exportToPDF('report-content', 'varhad_report');
   };
 
+  const handleViewReport = () => {
+    alert('Opening report viewer...\n\nThis would display the full report in a modal or new page.');
+  };
+
+  const handleDownloadReport = () => {
+    alert('Downloading report...\n\nReport would be downloaded to your device.');
+  };
+
   const handleGenerateReport = () => {
     // Generate report based on selected filters
     const report = {
@@ -188,8 +196,8 @@ const Reports = () => {
               <td>Oct 1-20, 2025</td>
               <td><span className="badge">PDF</span></td>
               <td>
-                <button className="btn btn-sm btn-primary">Download</button>
-                <button className="btn btn-sm btn-secondary">View</button>
+                <button className="btn btn-sm btn-primary" onClick={handleDownloadReport} style={{ marginRight: '4px' }}>Download</button>
+                <button className="btn btn-sm btn-secondary" onClick={handleViewReport}>View</button>
               </td>
             </tr>
             <tr>
@@ -198,8 +206,8 @@ const Reports = () => {
               <td>Jul-Sep 2025</td>
               <td><span className="badge">Excel</span></td>
               <td>
-                <button className="btn btn-sm btn-primary">Download</button>
-                <button className="btn btn-sm btn-secondary">View</button>
+                <button className="btn btn-sm btn-primary" onClick={handleDownloadReport} style={{ marginRight: '4px' }}>Download</button>
+                <button className="btn btn-sm btn-secondary" onClick={handleViewReport}>View</button>
               </td>
             </tr>
             <tr>
@@ -208,8 +216,8 @@ const Reports = () => {
               <td>September 2025</td>
               <td><span className="badge">PDF</span></td>
               <td>
-                <button className="btn btn-sm btn-primary">Download</button>
-                <button className="btn btn-sm btn-secondary">View</button>
+                <button className="btn btn-sm btn-primary" onClick={handleDownloadReport} style={{ marginRight: '4px' }}>Download</button>
+                <button className="btn btn-sm btn-secondary" onClick={handleViewReport}>View</button>
               </td>
             </tr>
           </tbody>
