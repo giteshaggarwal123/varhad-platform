@@ -42,13 +42,17 @@ const Layout = () => {
       <div className="sidebar">
         <div className="sidebar-header">
           <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-            <img 
-              src="/varhad-logo.svg" 
-              alt="VARHAD Logo" 
-              style={{ 
-                maxWidth: '180px', 
+            <img
+              src={`${process.env.PUBLIC_URL}/varhad-logo.svg`}
+              alt="VARHAD Logo"
+              style={{
+                maxWidth: '180px',
                 height: 'auto'
-              }} 
+              }}
+              onError={(e) => {
+                console.error('Logo failed to load');
+                e.target.style.display = 'none';
+              }}
             />
           </div>
           <h2>VARHAD PrEPARED</h2>
