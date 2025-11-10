@@ -15,7 +15,7 @@ const ClientOutreach = () => {
     outreachType: 'Virtual Outreach',
     referralMethod: ''
   });
-  const [clientID, setClientID] = useState('');
+  const [clientID] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 

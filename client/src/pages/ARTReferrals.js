@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const ARTReferrals = () => {
-  const navigate = useNavigate();
   const [referrals, setReferrals] = useState([]);
   const [stats, setStats] = useState(null);
   const [clients, setClients] = useState([]);
