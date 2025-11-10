@@ -10,9 +10,11 @@ const Layout = () => {
 
   const allNavItems = [
     { path: '/dashboard', label: 'Dashboard' },
-    { path: '/outreach', label: 'Client Outreach' },
-    { path: '/hiv-testing', label: 'HIV Testing' },
+    { path: '/outreach', label: 'Client Outreach (Reach)' },
+    { path: '/hiv-testing', label: 'Engagement & Testing' },
     { path: '/prep', label: 'PrEP Initiation' },
+    { path: '/hiv-positivity-tracker', label: 'HIV Positivity Tracker' },
+    { path: '/art-referrals', label: 'ART Referrals' },
     { path: '/documents', label: 'Documents' },
     { path: '/inventory', label: 'Inventory' },
     { path: '/asset-management', label: 'Asset Management' },
@@ -21,6 +23,7 @@ const Layout = () => {
     { path: '/prep-consent', label: 'PrEP Consent' },
     { path: '/clients', label: 'Client Database' },
     { path: '/reports', label: 'Reports' },
+    { path: '/user-management', label: 'User Management' },
     { path: '/settings', label: 'Settings' }
   ];
 

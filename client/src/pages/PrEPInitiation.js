@@ -20,6 +20,12 @@ const PrEPInitiation = () => {
     adherenceCounsellingProvided: true,
     sideEffectsDiscussed: true
   });
+  const [uploadedDocs, setUploadedDocs] = useState({
+    testReport: null,
+    prescription: null,
+    consentForm: null,
+    paymentScreenshot: null
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,7 +44,28 @@ const PrEPInitiation = () => {
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+    const newFormData = { ...formData, [e.target.name]: value };
+
+    // Auto-calculate next follow-up date when initiation date or prescription duration changes
+    if (e.target.name === 'prepInitiationDate' || e.target.name === 'prescriptionDuration') {
+      const initiationDate = e.target.name === 'prepInitiationDate' ? new Date(value) : new Date(formData.prepInitiationDate);
+      const duration = e.target.name === 'prescriptionDuration' ? parseInt(value) : parseInt(formData.prescriptionDuration);
+
+      if (initiationDate && duration) {
+        const followUpDate = new Date(initiationDate);
+        followUpDate.setDate(followUpDate.getDate() + duration);
+        newFormData.nextFollowUpDate = followUpDate.toISOString().split('T')[0];
+      }
+    }
+
+    setFormData(newFormData);
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setUploadedDocs({ ...uploadedDocs, [name]: files[0] });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -52,9 +79,23 @@ const PrEPInitiation = () => {
     setError('');
 
     try {
-      await axios.post('/api/prep', {
-        ...formData,
-        client: selectedClient
+      // Create FormData for file uploads
+      const prepFormData = new FormData();
+      prepFormData.append('client', selectedClient);
+      Object.keys(formData).forEach(key => {
+        prepFormData.append(key, formData[key]);
+      });
+
+      // Append documents if uploaded
+      if (uploadedDocs.testReport) prepFormData.append('testReport', uploadedDocs.testReport);
+      if (uploadedDocs.prescription) prepFormData.append('prescription', uploadedDocs.prescription);
+      if (uploadedDocs.consentForm) prepFormData.append('consentForm', uploadedDocs.consentForm);
+      if (uploadedDocs.paymentScreenshot) prepFormData.append('paymentScreenshot', uploadedDocs.paymentScreenshot);
+
+      await axios.post('/api/prep', prepFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
       alert('PrEP initiated successfully! Inventory updated and follow-up reminder created.');
@@ -178,7 +219,74 @@ const PrEPInitiation = () => {
                 onChange={handleChange}
                 required
               />
-              <span className="helper-text">Usually 30 days from initiation</span>
+              <span className="helper-text">Auto-calculated based on prescription duration</span>
+            </div>
+          </div>
+
+          <div className="card-title" style={{ marginTop: '24px' }}>Document Uploads</div>
+          <div className="alert alert-info">
+            Upload relevant documents for PrEP initiation (Report, Prescription, Consent Form, Payment Proof)
+          </div>
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Test Report</label>
+              <input
+                type="file"
+                name="testReport"
+                onChange={handleFileChange}
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <span className="helper-text">HIV test report, baseline test results</span>
+              {uploadedDocs.testReport && (
+                <div style={{ color: '#38a169', fontSize: '12px', marginTop: '4px' }}>
+                  ✓ {uploadedDocs.testReport.name}
+                </div>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Prescription</label>
+              <input
+                type="file"
+                name="prescription"
+                onChange={handleFileChange}
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <span className="helper-text">Doctor's prescription for PrEP medication</span>
+              {uploadedDocs.prescription && (
+                <div style={{ color: '#38a169', fontSize: '12px', marginTop: '4px' }}>
+                  ✓ {uploadedDocs.prescription.name}
+                </div>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Consent Form</label>
+              <input
+                type="file"
+                name="consentForm"
+                onChange={handleFileChange}
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <span className="helper-text">Signed consent form from client</span>
+              {uploadedDocs.consentForm && (
+                <div style={{ color: '#38a169', fontSize: '12px', marginTop: '4px' }}>
+                  ✓ {uploadedDocs.consentForm.name}
+                </div>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Payment Screenshot</label>
+              <input
+                type="file"
+                name="paymentScreenshot"
+                onChange={handleFileChange}
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <span className="helper-text">Proof of payment or transaction</span>
+              {uploadedDocs.paymentScreenshot && (
+                <div style={{ color: '#38a169', fontSize: '12px', marginTop: '4px' }}>
+                  ✓ {uploadedDocs.paymentScreenshot.name}
+                </div>
+              )}
             </div>
           </div>
 

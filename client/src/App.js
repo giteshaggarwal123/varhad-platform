@@ -20,6 +20,8 @@ import HRAttendance from './pages/HRAttendance';
 import PrEPConsent from './pages/PrEPConsent';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import HIVPositivityTracker from './pages/HIVPositivityTracker';
+import UserManagement from './pages/UserManagement';
 
 import './index.css';
 
@@ -55,6 +57,8 @@ function App() {
             <Route path="clients" element={<ClientDatabase />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="hiv-positivity-tracker" element={<HIVPositivityTracker />} />
+            <Route path="user-management" element={<UserManagement />} />
           </Route>
 
           {/* Catch all - redirect to dashboard */}

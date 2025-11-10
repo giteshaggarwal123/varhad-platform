@@ -31,7 +31,8 @@ const outreachSchema = new mongoose.Schema({
   },
   referralMethod: {
     type: String,
-    enum: ['One to One', 'Instagram', 'Grindr', 'Blued', 'Tinder', 'Facebook', 'WhatsApp', 'Others']
+    enum: ['One to One', 'Instagram', 'Grindr', 'Blued', 'Tinder', 'Facebook', 'WhatsApp', 'Website', 'Ad Leads', 'Others'],
+    required: true
   },
   additionalDetails: String
 }, {

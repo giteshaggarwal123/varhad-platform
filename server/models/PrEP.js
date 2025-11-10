@@ -66,6 +66,27 @@ const prepSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  // Document Uploads for Initiation Stage
+  documents: {
+    testReport: String,  // File path for test report
+    prescription: String,  // File path for prescription
+    consentForm: String,  // File path for consent form
+    paymentScreenshot: String  // File path for payment proof
+  },
+  // Doctor Consultation Dates
+  doctorConsultations: [{
+    consultationDate: {
+      type: Date,
+      required: true
+    },
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    notes: String,
+    prescriptionGiven: Boolean,
+    nextConsultationDate: Date
+  }],
   // Follow-up tracking
   followUps: [{
     date: Date,

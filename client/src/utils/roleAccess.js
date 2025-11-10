@@ -4,6 +4,8 @@ export const moduleAccess = {
   outreach: ['admin', 'counsellor', 'fieldstaff'],
   'hiv-testing': ['admin', 'doctor', 'counsellor'],
   prep: ['admin', 'doctor'],
+  'hiv-positivity-tracker': ['admin', 'doctor', 'counsellor'],
+  'art-referrals': ['admin', 'doctor', 'counsellor'],
   documents: ['admin', 'doctor', 'counsellor'],
   inventory: ['admin', 'doctor', 'counsellor'],
   'asset-management': ['admin'],
@@ -12,6 +14,7 @@ export const moduleAccess = {
   'prep-consent': ['admin', 'doctor', 'counsellor'],
   clients: ['admin', 'doctor', 'counsellor'],
   reports: ['admin', 'doctor'],
+  'user-management': ['admin'],
   settings: ['admin', 'doctor', 'counsellor', 'fieldstaff']
 };
 

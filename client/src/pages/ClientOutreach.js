@@ -9,15 +9,11 @@ const ClientOutreach = () => {
     gender: 'Male',
     age: '',
     typology: 'MSM (Men who have Sex with Men)',
-    contactNumber: '',
-    email: '',
-    preferredContactMethod: 'WhatsApp',
-    maritalStatus: 'Unmarried',
     district: '',
-    specialNeeds: '',
+    reachStageNotes: '',
     outreachDate: new Date().toISOString().split('T')[0],
     outreachType: 'Virtual Outreach',
-    referralMethod: 'One to One'
+    referralMethod: ''
   });
   const [clientID, setClientID] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,29 +29,20 @@ const ClientOutreach = () => {
     setError('');
 
     try {
-      // Check for duplicate client by phone number
-      const checkRes = await axios.get(`/api/clients?contactNumber=${formData.contactNumber}`);
-      if (checkRes.data.data && checkRes.data.data.length > 0) {
-        setError(`Client with phone number ${formData.contactNumber} already exists! Client ID: ${checkRes.data.data[0].clientID}`);
-        setLoading(false);
-        return;
-      }
-
-      // Create client
+      // Create client in reach stage (no contact number yet)
       const clientRes = await axios.post('/api/clients', formData);
-      const newClientID = clientRes.data.data.clientID;
-      setClientID(newClientID);
+      const newClient = clientRes.data.data;
 
       // Create outreach record
       await axios.post('/api/outreach', {
-        client: clientRes.data.data._id,
+        client: newClient._id,
         outreachDate: formData.outreachDate,
         district: formData.district,
         outreachType: formData.outreachType,
         referralMethod: formData.referralMethod
       });
 
-      alert(`Client registered successfully with ID: ${newClientID}`);
+      alert(`Client registered successfully in Reach Stage! Proceed to Engagement Stage to add contact details and generate Client ID.`);
       navigate('/hiv-testing');
     } catch (err) {
       setError(err.response?.data?.message || 'Error creating client');
@@ -111,8 +98,9 @@ const ClientOutreach = () => {
               </select>
             </div>
             <div className="form-group">
-              <label>Referral Method</label>
-              <select name="referralMethod" value={formData.referralMethod} onChange={handleChange}>
+              <label>Referral Method <span className="required">*</span></label>
+              <select name="referralMethod" value={formData.referralMethod} onChange={handleChange} required>
+                <option value="">-- Select Referral Method --</option>
                 <option>One to One</option>
                 <option>Instagram</option>
                 <option>Grindr</option>
@@ -120,6 +108,8 @@ const ClientOutreach = () => {
                 <option>Tinder</option>
                 <option>Facebook</option>
                 <option>WhatsApp</option>
+                <option>Website</option>
+                <option>Ad Leads</option>
                 <option>Others</option>
               </select>
             </div>
@@ -170,56 +160,18 @@ const ClientOutreach = () => {
                 <option>Others</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>Contact Number <span className="required">*</span></label>
-              <input
-                type="tel"
-                name="contactNumber"
-                value={formData.contactNumber}
-                onChange={handleChange}
-                placeholder="Enter phone (10 digits)"
-                pattern="[0-9]{10}"
-                title="Please enter a valid 10-digit phone number"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Email ID</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter email"
-              />
-            </div>
-            <div className="form-group">
-              <label>Preferred Contact Method</label>
-              <select name="preferredContactMethod" value={formData.preferredContactMethod} onChange={handleChange}>
-                <option>WhatsApp</option>
-                <option>Phone Call</option>
-                <option>SMS</option>
-                <option>Email</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Marital Status</label>
-              <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange}>
-                <option>Unmarried</option>
-                <option>Married</option>
-                <option>Divorced</option>
-                <option>Widowed</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Special Needs/Notes</label>
+            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+              <label>Special Notes/Instructions</label>
               <textarea
-                name="specialNeeds"
-                value={formData.specialNeeds}
+                name="reachStageNotes"
+                value={formData.reachStageNotes}
                 onChange={handleChange}
-                placeholder="Any special requirements, disabilities, or important notes"
-                rows="2"
+                placeholder="Any important notes about reach stage - communication preferences, specific needs, engagement context, etc."
+                rows="3"
               />
+              <span className="helper-text">
+                Use this field to record details about initial contact, client's situation, or any special considerations for follow-up
+              </span>
             </div>
           </div>
 
@@ -228,7 +180,7 @@ const ClientOutreach = () => {
               Back to Dashboard
             </button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : 'Save & Continue to HIV Testing'}
+              {loading ? 'Saving...' : 'Save & Continue to Engagement Stage'}
             </button>
           </div>
         </div>

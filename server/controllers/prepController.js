@@ -13,7 +13,29 @@ exports.createPrEP = async (req, res) => {
       req.body.doctor = req.user.id;
     }
 
-    const prep = await PrEP.create(req.body);
+    // Handle file uploads
+    const documents = {};
+    if (req.files) {
+      if (req.files.testReport) {
+        documents.testReport = req.files.testReport[0].path;
+      }
+      if (req.files.prescription) {
+        documents.prescription = req.files.prescription[0].path;
+      }
+      if (req.files.consentForm) {
+        documents.consentForm = req.files.consentForm[0].path;
+      }
+      if (req.files.paymentScreenshot) {
+        documents.paymentScreenshot = req.files.paymentScreenshot[0].path;
+      }
+    }
+
+    const prepData = {
+      ...req.body,
+      documents
+    };
+
+    const prep = await PrEP.create(prepData);
 
     // Update client PrEP status
     await Client.findByIdAndUpdate(req.body.client, {

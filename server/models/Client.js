@@ -4,8 +4,10 @@ const clientSchema = new mongoose.Schema({
   clientID: {
     type: String,
     unique: true,
+    sparse: true,  // Allow null values for clients not yet in engagement stage
     match: /^VH\d{5}$/  // Format: VH00001 to VH99999
   },
+  // Reach Stage Fields
   name: {
     type: String,
     required: true
@@ -25,10 +27,14 @@ const clientSchema = new mongoose.Schema({
     enum: ['MSM (Men who have Sex with Men)', 'Transgender', 'FSW (Female Sex Workers)', 'PWID (People Who Inject Drugs)', 'Others'],
     required: true
   },
-  contactNumber: {
+  district: {
     type: String,
     required: true
   },
+  reachStageNotes: String,  // Special notes for reach stage
+
+  // Engagement Stage Fields (filled when client moves to engagement)
+  contactNumber: String,  // Not required in reach stage, required in engagement
   alternatePhone: String,
   email: String,
   preferredContactMethod: {
@@ -40,10 +46,9 @@ const clientSchema = new mongoose.Schema({
     type: String,
     enum: ['Unmarried', 'Married', 'Divorced', 'Widowed']
   },
-  district: {
-    type: String,
-    required: true
-  },
+  engagementStageNotes: String,  // Special instructions/notes for engagement stage
+
+  // Common Fields
   specialNeeds: String,
   hivStatus: {
     type: String,
@@ -73,16 +78,17 @@ const clientSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Auto-generate Client ID before saving with retry logic for race conditions
+// Auto-generate Client ID when contactNumber is provided (engagement stage)
 clientSchema.pre('save', async function(next) {
-  if (!this.clientID) {
+  // Only generate clientID if contactNumber is provided and clientID doesn't exist
+  if (this.contactNumber && !this.clientID) {
     let attempts = 0;
     const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
       try {
         // Find the highest client ID and increment
-        const lastClient = await this.constructor.findOne({}, {}, { sort: { 'clientID': -1 } });
+        const lastClient = await this.constructor.findOne({ clientID: { $exists: true } }, {}, { sort: { 'clientID': -1 } });
         if (lastClient && lastClient.clientID) {
           const lastNumber = parseInt(lastClient.clientID.substring(2));
           const newNumber = (lastNumber + 1).toString().padStart(5, '0');
